@@ -1,5 +1,5 @@
 {
-  "name": "ngx-international-phone-number2",
+  "name": "@haithamsboui/ngx-international-phone-number2",
   "version": "1.2.4",
   "scripts": {
     "build": "gulp build",
@@ -16,27 +16,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esoyke/ngx-international-phone-number2"
+    "url": "https://github.com/haithamsboui/ngx-international-phone-number2"
   },
   "author": {
-    "name": "Eric Soyke",
-    "email": "soykes@yahoo.com"
+    "name": "haihtam sboui ",
+    "email": "haithamsbouii@gmail.com"
   },
   "keywords": [
     "angular"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/esoyke/ngx-international-phone-number2/issues"
+    "url": "https://github.com/haithamsboui/ngx-international-phone-number2/issues"
   },
   "devDependencies": {
-    "@angular/common": "^7.2.15",
-    "@angular/compiler": "^7.2.15",
-    "@angular/compiler-cli": "^7.2.15",
-    "@angular/core": "^7.2.15",
-    "@angular/forms": "^7.2.15",
-    "@angular/platform-browser": "^7.2.15",
-    "@angular/platform-browser-dynamic": "^7.2.15",
+    "@angular/common": "^8.0.0",
+    "@angular/compiler": "^8.0.0",
+    "@angular/compiler-cli": "^8.0.0",
+    "@angular/core": "^8.0.0",
+    "@angular/forms": "^8.0.0",
+    "@angular/platform-browser": "^8.0.0",
+    "@angular/platform-browser-dynamic": "^8.0.0",
     "@compodoc/compodoc": "^1.1.9",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
@@ -67,7 +67,7 @@
     "systemjs": "^0.20.12",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
-    "typescript": "~3.1.6",
+    "typescript": "~3.4.0",
     "zone.js": "^0.8.29"
   },
   "engines": {

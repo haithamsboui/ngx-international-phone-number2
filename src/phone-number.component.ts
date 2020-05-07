@@ -18,8 +18,8 @@ import {
     NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import * as glibphone from 'google-libphonenumber';
-import { Country } from './country.model';
-import { CountryService } from './country.service';
+import {Country} from './country.model';
+import {CountryService} from './country.service';
 
 const PLUS = '+';
 
@@ -51,24 +51,25 @@ export class PhoneNumberComponent
     @Input() maxlength = 12; // default
 
     @Input() defaultCountry: string;
-    @Input() required: boolean = false;
+    @Input() required = false;
     @Input() allowDropdown = true;
     @Input() type = 'text';
 
     @Input() allowedCountries: Country[];
 
+    // tslint:disable-next-line:max-line-length
     // only doing masking for US and Canadian numbers. Other countries can have different patterns, Finland even allows numbers from 5 to 12 digits. Rely on Google-libphonenumber
     masking = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
     // optionally format output model with a space between country code and phone number
-    @Input() countryCodeSpace: boolean = true;
-    
+    @Input() countryCodeSpace = true;
+
     // optionally suppress the +1 for US phones
-    @Input() noUSCountryCode: boolean = true;
+    @Input() noUSCountryCode = true;
 
     // Set true if you want the model touched upon any change, rather than just when valid or blurred.
-    @Input() autoTouch: boolean = false;
-    
+    @Input() autoTouch = false;
+
     @Output() onCountryCodeChanged: EventEmitter<any> = new EventEmitter();
 
     // ELEMENT REF
@@ -83,7 +84,7 @@ export class PhoneNumberComponent
     countryFilter: string;
     showDropdown = false;
     phoneNumber = '';
-    phoneNumberOnly = ''; //separating the phone from the country dial code
+    phoneNumberOnly = ''; // separating the phone from the country dial code
     hasAreaCodeParenthesis = false; // try to format output as before
     hasDashes = false; // try to format output as before
 
@@ -92,7 +93,7 @@ export class PhoneNumberComponent
     // the country's dial code displayed as read-only
     dialCode;
 
-    @ViewChild('phoneNumberInput') phoneNumberInput: ElementRef;
+    @ViewChild('phoneNumberInput', {static: false}) phoneNumberInput: ElementRef;
 
     /**
      * Util function to check if given text starts with plus sign
@@ -127,26 +128,28 @@ export class PhoneNumberComponent
             this.countries = this.countryService.getCountries();
         }
         this.orderCountriesByName();
-        if(this.defaultCountry)
+        if (this.defaultCountry) {
             this.setDefault();
-        if(!this.selectedCountry)
+        }
+        if (!this.selectedCountry) {
             this.findPrefix(this.defaultCountry);
+        }
     }
 
     /**
      * Return true if not US or Canada. Eliminates masking and relies solely on Google-libphonenumber for validation
      */
-    isForeign(){
-        return this.selectedCountry && this.selectedCountry.countryCode!='us' && this.selectedCountry.countryCode!='ca';
+    isForeign() {
+        return this.selectedCountry && this.selectedCountry.countryCode != 'us' && this.selectedCountry.countryCode != 'ca';
     }
 
     /**
      * Moves default country to top of the list to avoid having to scroll
      */
-    setDefault(){
+    setDefault() {
         let temp;
-        this.countries.forEach((country) =>{
-            if(country.countryCode == this.defaultCountry){
+        this.countries.forEach((country) => {
+            if (country.countryCode == this.defaultCountry) {
                 temp = country;
             }
         });
@@ -194,8 +197,8 @@ export class PhoneNumberComponent
      * @param event
      */
     updatePhoneNumber(event: Event) {
-        if (PhoneNumberComponent.startsWithPlus((''+event))) {
-            this.findPrefix((''+event).split(PLUS)[1]);
+        if (PhoneNumberComponent.startsWithPlus(('' + event))) {
+            this.findPrefix(('' + event).split(PLUS)[1]);
         } else {
             // this.selectedCountry = null; // why were they setting this to null?
         }
@@ -226,11 +229,12 @@ export class PhoneNumberComponent
         } else {
             this.selectedCountry = null;
         }
-        var defaultCountryUS = {name: "United States", dialCode: "1", countryCode: "us"};
-        if(this.selectedCountry)
+        let defaultCountryUS = {name: 'United States', dialCode: '1', countryCode: 'us'};
+        if (this.selectedCountry) {
             this.dialCode = this.selectedCountry.dialCode;
-        else
+        } else {
             this.selectedCountry = defaultCountryUS;
+        }
     }
 
     /**
@@ -262,7 +266,7 @@ export class PhoneNumberComponent
      * Touch the model for validation when input is blurred. This allows for validation errors only after
      * user has entered a value and left the element, rather than as soon as typing begins
      */
-    blur(){
+    blur() {
         this.onTouch();
     }
 
@@ -288,16 +292,14 @@ export class PhoneNumberComponent
     }
 
     // strips country dial code from phone for display
-    getPhoneOnly(){
+    getPhoneOnly() {
         // if country code, read the number after the country code and space
-        if (PhoneNumberComponent.startsWithPlus(this.phoneNumber)){
+        if (PhoneNumberComponent.startsWithPlus(this.phoneNumber)) {
             let space = this.phoneNumber.indexOf(' ');
             this.phoneNumberOnly = this.phoneNumber.substring(space, this.phoneNumber.length);
-            this.phoneNumberOnly = this.phoneNumberOnly.replace(/\D/g, "");
-        }
-        // otherwise read the 10 digit domestic phone
-        else {
-            this.phoneNumberOnly = this.phoneNumber.replace(/\D/g, "");
+            this.phoneNumberOnly = this.phoneNumberOnly.replace(/\D/g, '');
+        } else {
+            this.phoneNumberOnly = this.phoneNumber.replace(/\D/g, '');
             this.phoneNumberOnly = this.phoneNumberOnly.substring(this.phoneNumberOnly.length - 10, this.phoneNumberOnly.length);
         }
     }
@@ -309,20 +311,21 @@ export class PhoneNumberComponent
     validate(c: FormControl): ValidationErrors | null {
         let value = c.value;
         // let selectedDialCode = this.getSelectedCountryDialCode();
-        var validationError = {
+        let validationError = {
             phoneEmptyError: {
                 valid: false // maintaining this to be backward compatible with prior versions
             },
-            required: this.formattedPhone().replace(/\D/g, "").length < 1, // this is a more standard error flag
+            required: this.formattedPhone().replace(/\D/g, '').length < 1, // this is a more standard error flag
             pattern: false
         };
 
         // strip out stuff like (,),-
         let digits;
-        if(value)
-            digits = value.replace(/\D/g, "");
-        if (this.formattedPhone().replace(/\D/g, "").length < 1) {
-            if(this.required){
+        if (value) {
+            digits = value.replace(/\D/g, '');
+        }
+        if (this.formattedPhone().replace(/\D/g, '').length < 1) {
+            if (this.required) {
                 validationError.phoneEmptyError.valid = true;
                 validationError.required = true;
                 return validationError;
@@ -335,15 +338,18 @@ export class PhoneNumberComponent
             const phoneUtil = glibphone.PhoneNumberUtil.getInstance();
             try {
                 // add country code to US to test validation, not for model update or display
-                if(this.selectedCountry.countryCode=='us' && this.noUSCountryCode)
-                    value = '+1 '+this.phoneNumberOnly;
+                if (this.selectedCountry.countryCode == 'us' && this.noUSCountryCode) {
+                    value = '+1 ' + this.phoneNumberOnly;
+                }
                 let phoneNumber = phoneUtil.parse(value);
                 let isValidNumber = phoneUtil.isValidNumber(phoneNumber);
+                // tslint:disable-next-line:max-line-length
                 // touch model if valid, to avoid setting untouched before finishing entering value and potentially impacting parent's error display
-                if(isValidNumber)
+                if (isValidNumber) {
                     this.onTouch();
-                else
+                } else {
                     validationError.pattern = true;
+                }
                 return isValidNumber ? null : validationError;
             } catch (ex) {
                 validationError.pattern = true;
@@ -361,28 +367,32 @@ export class PhoneNumberComponent
         let temp;
         let dialCode;
 
-        if(this.selectedCountry.countryCode == 'us' && this.noUSCountryCode)
+        if (this.selectedCountry.countryCode == 'us' && this.noUSCountryCode) {
             dialCode = '';
-        else
-            dialCode = '+'+this.dialCode;    
-        if(this.countryCodeSpace)
-            temp = dialCode+' '+this.formattedPhone();
-        else
-            temp = dialCode+this.formattedPhone();
-        
+        } else {
+            dialCode = '+' + this.dialCode;
+        }
+        if (this.countryCodeSpace) {
+            temp = dialCode + ' ' + this.formattedPhone();
+        } else {
+            temp = dialCode + this.formattedPhone();
+        }
+
         this.onModelChange(temp);
-        if(this.autoTouch)
+        if (this.autoTouch) {
             this.onTouch();
+        }
     }
 
-    formattedPhone(){
+    formattedPhone() {
         let formatted;
-        let temp = this.phoneNumberOnly.replace(/\D/g, "");        
-        if(!this.selectedCountry || !this.isForeign())
+        let temp = this.phoneNumberOnly.replace(/\D/g, '');
+        if (!this.selectedCountry || !this.isForeign()) {
             formatted = '(' + temp.substring(0, 3) + ') ' + temp.substring(3, 6) + '-' + temp.substring(6, temp.length);
-        else
-            formatted = temp;  
-        return formatted; 
+        } else {
+            formatted = temp;
+        }
+        return formatted;
     }
 
     /**
@@ -396,10 +406,11 @@ export class PhoneNumberComponent
             (country: Country) => country.countryCode === countryCode
         );
         if (this.selectedCountry) {
-            if(this.selectedCountry.countryCode != 'us' || !this.noUSCountryCode)
+            if (this.selectedCountry.countryCode != 'us' || !this.noUSCountryCode) {
                 this.dialCode = this.selectedCountry.dialCode;
-            else
-                this.dialCode = null; 
+            } else {
+                this.dialCode = null;
+            }
         }
     }
 
@@ -407,7 +418,10 @@ export class PhoneNumberComponent
      * Returns the selected country's dialcode
      */
     public getSelectedCountryDialCode(): string {
-        if (this.selectedCountry) { return PLUS + this.selectedCountry.dialCode; };
+        if (this.selectedCountry) {
+            return PLUS + this.selectedCountry.dialCode;
+        }
+        ;
         return null;
     }
 }

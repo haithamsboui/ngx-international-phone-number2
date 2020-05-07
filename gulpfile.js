@@ -7,6 +7,7 @@ var gulp = require('gulp'),
   del = require('del'),
   runSequence = require('run-sequence'),
   inlineResources = require('./tools/gulp/inline-resources');
+var ngFsUtils = require('@angular/compiler-cli/src/ngtsc/file_system');
 
 const rootFolder = path.join(__dirname);
 const srcFolder = path.join(rootFolder, 'src');
@@ -49,6 +50,7 @@ gulp.task('inline-resources', function () {
  *    compiled modules to the /build folder.
  */
 gulp.task('ngc', function () {
+    ngFsUtils.setFileSystem(new ngFsUtils.NodeJSFileSystem());
     return ngc(['-p', `${tmpFolder}/tsconfig.es5.json`], (error) => {
       if (error) {
         throw new Error('ngc compilation failed: ' + error);

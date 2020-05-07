@@ -1,3 +1,5 @@
+forked from [esoyke/ngx-international-phone-number2](https://github.com/esoyke/ngx-international-phone-number2)
+
 # ngx-international-phone-number2
 A simple international telephone number input. Allows you to create a phone number field with country dropdown. 
 
